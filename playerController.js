@@ -19,15 +19,19 @@ function OnCollisionEnter(hit: Collision){
 // Movement control
 var speed : float = 5;
 var jumpHeight : float = 6;
+var jumpSpeed : float = 1.5;
 var characterModel : GameObject;
 
-private var grounded : boolean = true;
+private var distanceToGround : float;
 private var jumpDelay : boolean = false;
 private var currentlyJumping : boolean = false;
 
-function FixedUpdate(){
+function Start(){
+	distanceToGround = collider.bounds.extents.y;
+}
+
+function Update(){
 	
-	if (grounded){
 		// x axis movement
 		if (Input.GetKey(KeyCode.A)){
 			transform.rotation.y = 15;
@@ -42,9 +46,6 @@ function FixedUpdate(){
 				characterModel.animation.Play("Walk");
 			}
 		}
-	}
-	
-	grounded = false;
 	
 	// attacking
 	if (Input.GetKey(KeyCode.E)){
@@ -56,22 +57,25 @@ function FixedUpdate(){
 	}
 }
 
-// jumping
-// && currentlyJumping == false
-if (Input.GetKey(KeyCode.Space)){
-	Jump();
-}
-
-function OnCollisionStay (){
-	grounded = true;
+function FixedUpdate(){
+	// jumping
+	// && currentlyJumping == false
+	if (Input.GetKey(KeyCode.Space) && isGrounded()){
+		Jump();
+	}
 }
 
 function Jump(){
-		characterModel.animation.Play("Take off");
-		transform.position += Vector3.up * Time.deltaTime * jumpHeight;
-			//currentlyJumping = false;
+		characterModel.animation.Play("Jump");
+		rigidbody.AddForce(0, jumpHeight * 100, 0);
+		//rigidbody.velocity.y = jumpHeight * jumpSpeed;
+		//transform.position += Vector3.up * Time.deltaTime * jumpHeight;
 }
 
 function Attack(){
 	characterModel.animation.Play("Attack");
+}
+
+function isGrounded() : boolean{
+	return Physics.Raycast(transform.position, -Vector3.up, distanceToGround + 0.1);
 }
