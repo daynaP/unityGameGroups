@@ -30,10 +30,9 @@ function Start(){
 }
 
 function Update(){
-	
 		// x axis movement
 		if (Input.GetKey(KeyCode.A)){
-			transform.rotation.y = 15;
+			transform.rotation.y = 1.5;
 			transform.position += Vector3.left * Time.deltaTime * speed;
 			if (currentlyJumping == false){
 				characterModel.animation.Play("Walk");
@@ -65,7 +64,7 @@ function FixedUpdate(){
 }
 
 function Jump(){
-		characterModel.animation.Play("Jump");
+		characterModel.animation.Play("Take off");
 		rigidbody.AddForce(0, jumpHeight * 100, 0);
 		//rigidbody.velocity.y = jumpHeight * jumpSpeed;
 		//transform.position += Vector3.up * Time.deltaTime * jumpHeight;
@@ -77,4 +76,10 @@ function Attack(){
 
 function isGrounded() : boolean{
 	return Physics.Raycast(transform.position, -Vector3.up, distanceToGround + 0.1);
+}
+
+function OnTriggerEnter(other : Collider){
+	if (other.gameObject.tag == "enemy"){
+		rigidbody.AddForce(-speed, 0, 0);
+	}
 }
