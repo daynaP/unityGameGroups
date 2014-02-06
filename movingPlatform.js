@@ -3,12 +3,14 @@ var vertical : boolean;
 var distanceToTravel : float;
 var platformSpeed : float;
 var platformObject : GameObject;
+var playerCharacter : GameObject;
 
 private var reversing : boolean;
 private var startingPosition : Vector3;
 private var currentPosition : Vector3;
 
 function Start(){
+	playerCharacter = GameObject.FindWithTag("playerCharacter");
 	startingPosition = platformObject.transform.position;
 	reversing = false;
 
@@ -50,5 +52,17 @@ function Update(){
 			}
 		}
 			platformObject.transform.Translate(0, Time.deltaTime * platformSpeed, 0);
+	}
+}
+
+function OnCollisionEnter(collision : Collision){
+	if (collision.gameObject.tag == "playerCharacter"){
+		playerCharacter.transform.parent = platformObject.transform;
+	}
+}
+
+function OnCollisionExit(collision : Collision){
+	if (collision.gameObject.tag == "playerCharacter"){
+		playerCharacter.transform.parent = null;
 	}
 }
