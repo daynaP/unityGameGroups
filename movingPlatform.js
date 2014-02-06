@@ -4,10 +4,14 @@ var distanceToTravel : float;
 var platformSpeed : float;
 var platformObject : GameObject;
 
-private var startingPositionX = transform.position.x;
-private var startingPositionY = transform.position.y;
+private var reversing : boolean;
+private var startingPosition : Vector3;
+private var currentPosition : Vector3;
 
 function Start(){
+	startingPosition = platformObject.transform.position;
+	reversing = false;
+
 	// Both are checked
 	if (horizontal && vertical || !horizontal && !vertical){
 		horizontal = true;
@@ -16,11 +20,35 @@ function Start(){
 }
 
 function Update(){
-	Debug.Log(startingPositionY);
+	currentPosition = platformObject.transform.position;
 	
 	if (horizontal){
-		platformObject.transform.Translate(Time.deltaTime * platformSpeed, 0, 0);
+		/* If it's already at its destination */
+		if (!reversing){
+			if (startingPosition.x + distanceToTravel <= currentPosition.x){
+				platformSpeed = platformSpeed * -1;
+				reversing = true;
+			}
+		}else{
+			if (startingPosition.x >= currentPosition.x){
+				platformSpeed = platformSpeed * -1;
+				reversing = false;
+			}
+		}
+			platformObject.transform.Translate(Time.deltaTime * platformSpeed, 0, 0);
 	}else{
-		platformObject.transform.Translate(0, Time.deltaTime * platformSpeed, 0);
+		/* If it's already at its destination */
+		if (!reversing){
+			if (startingPosition.y + distanceToTravel <= currentPosition.y){
+				platformSpeed = platformSpeed * -1;
+				reversing = true;
+			}
+		}else{
+			if (startingPosition.y >= currentPosition.y){
+				platformSpeed = platformSpeed * -1;
+				reversing = false;
+			}
+		}
+			platformObject.transform.Translate(0, Time.deltaTime * platformSpeed, 0);
 	}
 }
