@@ -18,8 +18,7 @@ function OnCollisionEnter(hit: Collision){
 /////////////////////////////////////////////////////////////////////////////
 // Movement control
 var speed : float = 5;
-var jumpHeight : float = 6;
-var jumpSpeed : float = 1.5;
+var jumpHeight : float = 2;
 var characterModel : GameObject;
 
 private var distanceToGround : float;
